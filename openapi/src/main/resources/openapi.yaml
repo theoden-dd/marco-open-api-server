@@ -1,0 +1,140 @@
+openapi: 3.0.3
+info:
+  version: '1.0'
+  title: ToDo Application OpenAPI
+  
+servers:
+  - url: http://localhost:8080/api/
+    description: Dev server
+ 
+paths:
+  /tasks:
+    get:
+      summary: return all existing tasks
+      tags:
+        - Tasks
+      operationId: getAllTasks
+      responses:
+        '200':
+          description: ok
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Task'
+        'default':
+          description: oooops
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'        
+    post:
+      summary: create task
+      tags:
+        - Tasks
+      operationId: createTask
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Task'
+      responses:
+        '200':
+          description: ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task' 
+        'default':
+          description: oooops
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'        
+  /tasks/{task_id}:
+    get:
+      summary: return task with following Id
+      tags:
+        - Tasks
+      operationId: getTaskById
+      parameters:
+      - in: path
+        required: true
+        name: task_id
+        schema:
+          type: string
+        description: Идентификатор задачи
+        example: '6F9619FF-8B86-D011-B42D-00CF4FC964FF'
+      responses:
+        '200':
+          description: ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task' 
+        'default':
+          description: oooops
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      summary: delete task with following Id
+      tags:
+        - Tasks
+      operationId: deleteTaskById
+      parameters:
+      - in: path
+        required: true
+        name: task_id
+        schema:
+          type: string
+        description: Идентификатор задачи
+        example: '6F9619FF-8B86-D011-B42D-00CF4FC964FF'
+      responses:
+        '200':
+          description: Delete complited
+          content:
+            application/json: {} 
+        'default':
+          description: oooops
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  schemas:
+    Task:
+      type: object
+      required:
+        - name
+      properties:
+        task_id:
+          type: string
+          example: '6F9619FF-8B86-D011-B42D-00CF4FC964FF'
+        name:
+          type: string
+          example: "washing"
+        priority:
+          type: string
+          enum:
+            - low
+            - medium
+            - high
+          description: Срочность выполнения задачи
+        created at:
+          type: string
+          format: 2023-01-01T15:00:00+01
+    Error:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
+                
